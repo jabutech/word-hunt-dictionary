@@ -1,8 +1,9 @@
-import { createTheme, MenuItem, TextField, ThemeProvider } from '@material-ui/core';
+import { createTheme, debounce, MenuItem, TextField, ThemeProvider } from '@material-ui/core';
 import React from 'react'
 import './Header.css';
 // Import category from data component
 import categories from '../../data/category';
+import { useCallback } from 'react';
 
 const Header = ({category, setCategory, word, setWord, lightMode}) => {
 
@@ -26,6 +27,11 @@ const Header = ({category, setCategory, word, setWord, lightMode}) => {
 
     }
 
+    // Handle text after user typing in form and sent to callback deb
+    const handleText = debounce((text) => {
+        setWord(text);
+    }, 1000); // 1000 is delay sent word
+
     return (
         <div className='header'>
             <span className="title">{word ? word : "Word Hunt"}</span>
@@ -35,8 +41,7 @@ const Header = ({category, setCategory, word, setWord, lightMode}) => {
                     id="standard-basic" 
                     label="Search a Keyword"
                     className="search" 
-                    value={word}
-                    onChange={(e) => setWord(e.target.value)}
+                    onChange={(e) => handleText(e.target.value)}
                     />
 
                     <TextField
